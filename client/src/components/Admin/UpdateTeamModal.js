@@ -3,6 +3,7 @@ import {Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField
 import {addUserToTeamApi, removeUserFromTeamApi, updateTeamApi} from "../../apis/team";
 import {useDispatch, useSelector} from "react-redux";
 import {getUsersApi} from "../../apis/user";
+import { setError } from '../../slices/teamSlice';
 
 const style = {
     position: 'absolute',
@@ -58,12 +59,12 @@ const UpdateTeamModal = ({ team }) => {
                         <TextField value={teamName} onChange={(e) => setTeamName(e.target.value)} id="outlined-basic" label="Team Name" variant="outlined" />
                     </Typography><br/>
                     <FormControl style={{minWidth: 120}}>
-                        <InputLabel id="demo-simple-select-label">Users</InputLabel>
+                        <InputLabel id="demo-simple-select-label">Members</InputLabel>
                         <Select
                             defaultValue=""
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            label="Users"
+                            label="Members"
                             onChange={(e) => {
                                 setNewUser(e.target.value)
                             }}
@@ -96,10 +97,16 @@ const UpdateTeamModal = ({ team }) => {
                         size="small"
                         onClick={(e) => {
                             e.preventDefault();
-                            dispatch(updateTeamApi(team.id, teamName, maxNum));
-                            if (error) return null;
-                            handleClose();
-                        }}
+                            dispatch(updateTeamApi(team.id, teamName, maxNum, (data, err) => {
+                                if (!err) {
+                                    dispatch(setError(''));
+                                    setTeamName('');
+                                    setMaxNum('');
+                                    handleClose();
+                                }
+                            }));
+                        }
+                        }
                     >
                         Update
                     </Button>
@@ -109,8 +116,7 @@ const UpdateTeamModal = ({ team }) => {
                         color="secondary"
                         onClick={(e) => {
                             e.preventDefault();
-                            dispatch(addUserToTeamApi(newUser, teamName));
-                            if (!error) handleClose();
+                            dispatch(addUserToTeamApi(newUser, team.name));
                         }}
                     >
                         Add User
@@ -121,7 +127,7 @@ const UpdateTeamModal = ({ team }) => {
                         color="error"
                         onClick={(e) => {
                             e.preventDefault();
-                            dispatch(removeUserFromTeamApi(newUser, teamName));
+                            dispatch(removeUserFromTeamApi(newUser, team.name));
                             handleClose();
                         }}
                     >

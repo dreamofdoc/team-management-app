@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {Box, Button, Modal, TextField, Typography} from "@mui/material";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {addTeamApi} from "../../apis/team";
+import { setError } from '../../slices/teamSlice';
 
 const style = {
     position: 'absolute',
@@ -23,6 +24,8 @@ const AddTeamModal = () => {
     const [teamName, setTeamName] = useState('');
     const [maxNum, setMaxNum] = useState(10);
 
+    const error = useSelector(state => state.team.error);
+
     const dispatch = useDispatch();
 
     return (
@@ -43,6 +46,7 @@ const AddTeamModal = () => {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Add Team
                     </Typography>
+                    {error && <p className="error-message">{error}</p>}
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         <TextField value={teamName} onChange={(e) => setTeamName(e.target.value)} id="outlined-basic" label="Team Name" variant="outlined" />
                     </Typography><br/>
@@ -63,8 +67,14 @@ const AddTeamModal = () => {
                         variant="contained"
                         onClick={(e) => {
                             e.preventDefault();
-                            dispatch(addTeamApi(teamName, maxNum));
-                            handleClose();
+                            dispatch(addTeamApi(teamName, maxNum, (data, err) => {
+                                if (!err) {
+                                    dispatch(setError(''));
+                                    setTeamName('');
+                                    setMaxNum('');
+                                    handleClose();
+                                }
+                            }));
                         }}
                     >
                         Add

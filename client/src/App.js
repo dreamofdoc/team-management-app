@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./components/Login";
 import Landing from "./components/Landing";
 import Register from "./components/Register";
-import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
-import {auth} from "./apis/user";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { auth } from "./apis/user";
 import Profile from "./components/Profile";
 import AdminPanel from "./components/Admin/AdminPanel";
 import Err404 from "./components/404";
+import LoginRoute from "./components/LoginRoute";
 
 function App() {
     const isAuth = useSelector(state => state.user.isAuth);
@@ -22,14 +22,14 @@ function App() {
         <BrowserRouter>
             {!isAuth && <Routes>
                 <Route path="/" element={<Landing />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<LoginRoute />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="*" element={<Err404 />}/>
+                <Route path="*" element={<Err404 />} />
             </Routes>}
             {isAuth && <Routes>
                 <Route path="/me" element={<Profile />} />
                 {isAuth && isAdmin && <Route path="/admin" element={<AdminPanel />} />}
-                <Route path="*" element={<Err404 />}/>
+                <Route path="*" element={<Err404 />} />
             </Routes>}
         </BrowserRouter>
     );

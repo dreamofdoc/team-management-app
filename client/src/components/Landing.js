@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector} from "react-redux";
 import Login from "./Login";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Landing = () => {
     const { error } = useSelector(state => state.user)

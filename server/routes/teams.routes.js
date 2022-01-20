@@ -2,6 +2,7 @@ import { Router } from "express";
 const router = new Router();
 import Team from "../mongo/models/Team.js";
 import User from "../mongo/models/User.js";
+import mongoose from "mongoose";
 
 router.post('/add_team', async (req, res) => {
     try {
@@ -10,7 +11,7 @@ router.post('/add_team', async (req, res) => {
         await team.save();
         res.status(200).json({ message: `'${req.body.name}' team has been created`, team });
     } catch (err) {
-        res.status(400).json({ message: 'User error' });
+        res.status(400).json({ message: 'Enter team name and max number of members' });
     }
 });
 
@@ -51,6 +52,8 @@ router.post('/add_user_to_team', async (req, res) => {
         const { username, teamName } = req.body;
         if (!username || !teamName) return res.status(400).json({ message: 'Enter user and team name' });
         const user = await User.findOne({ username });
+        const team = await Team.findOne({ name: teamName });
+        if ((team.users.length + 1) > team.maxNumMembers) return res.status(400).json({ message: 'Users count is overlimited' });
         await Team.findOneAndUpdate({
             name: teamName
         }, {
@@ -74,7 +77,7 @@ router.delete('/delete_user_from_team', async (req, res) => {
         }, {
             $pull: {
                 users: {
-                    username
+                    _id: mongoose.Types.ObjectId(user._id)
                 }
             }
         }, { new: true });

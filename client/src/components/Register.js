@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {register} from "../apis/user";
-import {useDispatch, useSelector} from "react-redux";
-import {getTeamsApi} from "../apis/team";
-import {Button, TextField} from "@mui/material";
-import {Link, useNavigate} from "react-router-dom";
-import {setError} from "../slices/userSlice";
+import React, { useEffect, useState } from 'react';
+import { register } from "../apis/user";
+import { useDispatch, useSelector } from "react-redux";
+import { getTeamsApi } from "../apis/team";
+import { Button, TextField } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import { setError } from "../slices/userSlice";
 
 const Register = () => {
     const [teamName, setTeamName] = useState('');
@@ -42,14 +42,14 @@ const Register = () => {
                     }));
                 }}>
                     <TextField
-                        style={{width: '350px'}}
+                        style={{ width: '350px' }}
                         label="Team Name"
                         variant="standard"
                         value={teamName}
                         onChange={e => setTeamName(e.target.value)}
                     />
                     <TextField
-                        style={{width: '350px'}}
+                        style={{ width: '350px' }}
                         label="Email"
                         type="email"
                         variant="standard"
@@ -57,27 +57,34 @@ const Register = () => {
                         onChange={e => setEmail(e.target.value)}
                     />
                     <TextField
-                        style={{width: '350px'}}
+                        style={{ width: '350px' }}
                         label="Username"
                         variant="standard"
                         value={username}
                         onChange={e => setUsername(e.target.value)}
                     />
                     <TextField
-                        style={{width: '350px'}}
+                        style={{ width: '350px' }}
                         label="Password"
                         type="password"
                         variant="standard"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
-                    /><br/><br/>
+                    /><br /><br />
                     <Button
                         variant="contained"
                         size="small"
                         type="submit"
                     >
                         Register
-                    </Button>   or <Link to="/login">login</Link>
+                    </Button>   or <Link
+                        style={{ margin: '0' }}
+                        to="/login"
+                        className="logout-btn"
+                        onClick={(e) => {
+                            dispatch(setError(''));
+                            navigate('/login');
+                        }}>login</Link>
                 </form>
             </div>
         </div>

@@ -29,7 +29,7 @@ const AdminPanel = () => {
             <NavBar/>
             <div className="admin-table">
                 <h1 style={{textAlign: 'center'}}>Adminka</h1>
-                <TableContainer sx={{ minWidth: 550, maxWidth: 750 }} component={Paper}>
+                <TableContainer sx={{ maxWidth: 750 }} component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
