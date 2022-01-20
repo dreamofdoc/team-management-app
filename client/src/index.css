@@ -1,0 +1,118 @@
+body {
+    background-color: #FCF4F0;
+    font-family: fantasy;
+}
+
+#root {
+    margin: -8px;
+}
+
+.landing-register-box {
+    background-color: antiquewhite;
+    border: 1px solid #F59A6C;
+    border-radius: 10%;
+    padding: 5px;
+    margin: 60px auto;
+    width: 600px;
+}
+
+.landing-register-header {
+    font-family: Chilanka, sans-serif;
+    text-align: center;
+}
+
+.landing-register-form {
+    margin: 10px 30px;
+}
+
+.error-message {
+    color: darkred;
+    font-size: 12px;
+    font-style: italic;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-weight: bold;
+    margin: 20px;
+}
+
+.admin-table {
+    margin: 40px auto;
+    width: 50%;
+    background-color: blanchedalmond;
+    padding: 20px;
+    border-radius: 2%;
+    box-shadow: 3px 6px #F6DED2;
+}
+
+.table-headings {
+    font-style: italic;
+    font-weight: bold !important;
+    font-size: large !important;
+}
+
+.logout-btn {
+    text-decoration: none;
+    background-color: inherit;
+    color: #63565C;
+    padding: 5px;
+    margin: 10px 15px;
+}
+
+.logout-btn:hover {
+    color: black;
+}
+
+.navbar {
+    background-color: #D1B7A9;
+    height: 100%;
+    width: 10%;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 5px;
+}
+
+.nav-text {
+    font-family: Chilanka, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+}
+
+.nav-btns {
+    margin: 5px auto;
+}
+
+.pages-with-nav {
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-desc {
+    margin: 10px auto;
+    padding: 10px;
+    width: 50%;
+    display: flex;
+    align-content: stretch;
+    background-color: blanchedalmond;
+}
+
+.profile-name {
+    font-family: Chilanka, sans-serif;
+    margin-left: 80px;
+}
+
+img {
+    margin-top: 50px;
+    width: 150px;
+    height: 150px;
+}
+
+.profile-text {
+    font-family: Chilanka, sans-serif;
+}
+
+.text-section {
+    margin-left: 20px;
+}
