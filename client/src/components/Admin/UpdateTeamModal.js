@@ -116,7 +116,14 @@ const UpdateTeamModal = ({ team }) => {
                         color="secondary"
                         onClick={(e) => {
                             e.preventDefault();
-                            dispatch(addUserToTeamApi(newUser, team.name));
+                            dispatch(addUserToTeamApi(newUser, team.name, (data, err) => {
+                                if (!err) {
+                                    dispatch(setError(''));
+                                    setTeamName('');
+                                    setMaxNum('');
+                                    handleClose();
+                                }
+                            }));
                         }}
                     >
                         Add User
@@ -127,8 +134,12 @@ const UpdateTeamModal = ({ team }) => {
                         color="error"
                         onClick={(e) => {
                             e.preventDefault();
-                            dispatch(removeUserFromTeamApi(newUser, team.name));
-                            handleClose();
+                            dispatch(removeUserFromTeamApi(newUser, team.name, (data, err) => {
+                                dispatch(setError(''));
+                                setTeamName('');
+                                setMaxNum('');
+                                handleClose();
+                            }));
                         }}
                     >
                         Remove User

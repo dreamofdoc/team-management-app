@@ -1,5 +1,5 @@
 import axios from "axios";
-import {addTeam, getTeams, deleteTeam, updateTeam, setError, addUser} from "../slices/teamSlice";
+import {addTeam, getTeams, deleteTeam, updateTeam, setError, addUser, removeUser} from "../slices/teamSlice";
 
 export const getTeamsApi = () => async dispatch => {
     try {
@@ -51,27 +51,33 @@ export const updateTeamApi = (id, name, maxNum, callback) => async dispatch => {
     }
 }
 
-export const addUserToTeamApi = (username, teamName) => async dispatch => {
+export const addUserToTeamApi = (username, teamName, callback) => async dispatch => {
     try {
-        const response = await axios.post('http://localhost:8000/api/teams/add_user_to_team', {
+        const response = await axios.post('http://localhost:8000/api/teams/operation/add_user_to_team', {
             username,
             teamName
         });
         dispatch(addUser(response.data.teams));
+        callback(response.data, null)
         console.log(response.data.message);
     } catch (err) {
         dispatch(setError(err.response.data.message));
+        callback(null, err.response.data.message)
         console.log(err.response.data.message);
     }
 }
 
-export const removeUserFromTeamApi = (username, teamName) => async dispatch => {
+export const removeUserFromTeamApi = (username, teamName, callback) => async dispatch => {
     try {
-        const response = await axios.delete('http://localhost:8000/api/teams/delete_user_from_team', {
-            username,
-            teamName
-        });
+        const response = await axios.delete('http://localhost:8000/api/teams/operation/delete_user_from_team', { data: {
+                username,
+                teamName
+            }});
+        dispatch(removeUser(response.data.teams));
+        callback(response.data, null)
+        console.log(response.data.message)
     } catch (err) {
         dispatch(setError(err.response.data.message));
+        callback(null, err.response.data.message)
     }
 }

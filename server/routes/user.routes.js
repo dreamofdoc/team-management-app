@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
     try {
         const team = await Team.findOne({ name: teamName });
         if (!team) return res.status(400).json({ message: 'There is no team with such a name' });
-        const user = new User({ isAdmin, team: teamName, username, email, password });
+        const user = new User({ isAdmin, team: team._id, username, email, password });
         await Team.findOneAndUpdate({
                 name: teamName
             }, {
@@ -41,26 +41,12 @@ router.post('/login', loginMiddleware);
 
 router.get('/profile/:id', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
-        res.status(200).json({ user });
-    } catch (err) {
-        res.status(400).json({ err });
-    }
-});
-
-router.delete('/:id', async (req, res) => {
-    try {
-        const user = await User.findByIdAndDelete(req.params.id);
-        await Team.findOneAndUpdate({
-            name: user.team
-        }, {
-            users: {
-                $elemMatch: {}
-            }
+        await User.findById(req.params.id).populate('team').exec(function (err, user) {
+            if (err) return res.status(400).json({ message: 'Server error' });
+            res.status(200).json({ user });
         });
-        res.status(200).json({ message: 'User has been deleted' });
     } catch (err) {
-        res.status(400).json({ err });
+        res.status(400).json({ message: 'Server error' });
     }
 });
 

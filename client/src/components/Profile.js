@@ -4,14 +4,14 @@ import {useSelector} from "react-redux";
 import NavBar from "./NavBar";
 
 const Profile = () => {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({ team: '', username: '' });
     const userID = useSelector(state => state.user.id);
 
     const getUser = async () => {
         try {
             const response = await axios.get(`http://localhost:8000/api/auth/profile/${userID}`);
             setUser(response.data.user);
-            // console.log(response.data.user);
+            console.log(response.data.user);
         } catch (err) {
             console.log(err.response.data)
         }
@@ -30,7 +30,7 @@ const Profile = () => {
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj3be0NvJcT_uyHSuHN5t47-D2orRO656BqMwAZnFpc7FpZhc5bbteQPna5I46SuKqe0U&usqp=CAU"
                         alt="User Picture"
                     />
-                    <p><b>Team: </b>{user.team}</p>
+                    <p><b>Team: </b>{user.team.name}</p>
                     <p><b>Hobbies: </b><ul>
                         <li>Football</li>
                         <li>Cybersport</li>

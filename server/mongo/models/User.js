@@ -8,8 +8,8 @@ const UserSchema = new mongoose.Schema({
         default: false
     },
     team: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Team'
     },
     username: {
         type: String,

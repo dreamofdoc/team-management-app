@@ -26,9 +26,12 @@ export const teamSlice = createSlice({
         },
         addUser: (state, action) => {
             state.teams = action.payload
+        },
+        removeUser: (state, action) => {
+            state.teams = action.payload
         }
     }
 })
 
-export const { getTeams, addTeam, deleteTeam, updateTeam, setError, addUser } = teamSlice.actions
+export const { getTeams, addTeam, deleteTeam, updateTeam, setError, addUser, removeUser } = teamSlice.actions
 export default teamSlice.reducer
