@@ -22,9 +22,5 @@ const TeamSchema = new mongoose.Schema({
 
 mongoose.set('runValidators', true);
 
-// TeamSchema.path('users').validate(function (users) {
-//    if (users.length > this.maxNumMembers)
-// });
-
 const Team = mongoose.model('Team', TeamSchema);
 export default Team;

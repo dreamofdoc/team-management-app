@@ -126,7 +126,7 @@ const UpdateTeamModal = ({ team }) => {
                             }));
                         }}
                     >
-                        Add User
+                        Add Member
                     </Button>
                     <Button
                         variant="contained"
@@ -144,7 +144,7 @@ const UpdateTeamModal = ({ team }) => {
                             }));
                         }}
                     >
-                        Remove User
+                        Remove Member
                     </Button>
                 </Box>
             </Modal>
