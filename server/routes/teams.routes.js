@@ -28,6 +28,12 @@ router.get('/get_teams', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
+        await Team.findById(req.params.id).populate('users').exec(function (err, team) {
+            team.users.map(async (user) => {
+                await User.findByIdAndDelete(user._id);
+            });
+            console.log(team)
+        });
         const team = await Team.findByIdAndDelete(req.params.id);
         res.status(200).json({ team, message: 'Team has been deleted' });
     } catch (err) {
@@ -45,7 +51,7 @@ router.patch('/:id', async (req, res) => {
         const team = await Team.findByIdAndUpdate(req.params.id, { name, maxNumMembers: maxNum }, { new: true, runValidators: true });
         res.status(200).json({ team, message: 'Team has been updated' });
     } catch (err) {
-        res.status(400).json({ message: 'Something wrong while updating' });
+        res.status(400).json({ message: 'Enter team name and max members' });
     }
 });
 
@@ -55,7 +61,13 @@ router.post('/operation/add_user_to_team', async (req, res) => {
         if (!username || !teamName) return res.status(400).json({ message: 'Enter username' });
         const user = await User.findOne({ username });
         const team = await Team.findOne({ name: teamName });
-        if ((team.users.length + 1) > team.maxNumMembers) return res.status(400).json({ message: 'Users count is overlimited' });
+        if ((team.users.length + 1) > team.maxNumMembers) return res.status(400).json({ message: 'Users count is over-limited' });
+        await Team.findOne({ name: teamName }).populate('users').exec(function (err, team) {
+            if (err) return res.status(400).json({ message: 'Something gone wrong' });
+            team.users.map(user => {
+                if (user.username === username) return res.status(400).json({ message: 'Member with such username already exists' });
+            });
+        });
         await Team.findOneAndUpdate({
             name: teamName
         }, {
@@ -63,13 +75,10 @@ router.post('/operation/add_user_to_team', async (req, res) => {
                 users: user
             }
         });
-        await User.findOne({ username }).populate('team').exec(async function (err, user) {
-            if (err) return res.status(400).json({ message: 'Server error' });
-            console.log(user)
-            const prevTeam = await Team.findOne({ name: user.team });
-            prevTeam.users.remove(user);
-            await prevTeam.save();
-        });
+        const prevTeam = await Team.findById(user.team);
+        prevTeam.users.remove(user);
+        await User.findOneAndUpdate({ username }, { team: team._id }, { new: true, runValidators: true })
+        await prevTeam.save();
         await Team.find({}).populate('users').exec(function (err, teams) {
             if (err) return res.status(400).json({ message: 'Something gone wrong with teams' })
             res.status(200).json({ teams, message: `User has been added to ${req.body.teamName}` });
@@ -82,19 +91,12 @@ router.post('/operation/add_user_to_team', async (req, res) => {
 router.delete('/operation/delete_user_from_team', async (req, res) => {
     try {
         const { username, teamName } = req.body;
+        if (!username) return res.status(400).json({ message: 'Enter member name to delete' });
         const user = await User.findOne({ username });
-        // await Team.findOneAndUpdate({
-        //     name: 'Psychos'
-        // }, {
-        //     $pull: {
-        //         users: {
-        //             _id: mongoose.Types.ObjectId(user._id)
-        //         }
-        //     }
-        // }, { new: true });
         const team = await Team.findOne({ name: teamName });
         team.users.remove(user);
         await team.save();
+        await User.findOneAndUpdate({ username }, { team: '' }, { new: true, runValidators: true });
         await Team.find({}).populate('users').exec(function (err, teams) {
             if (err) return res.status(400).json({ message: 'Choose username to delete user' })
             res.status(200).json({ teams, message: 'User has been removed from team' });

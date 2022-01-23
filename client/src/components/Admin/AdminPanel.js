@@ -43,7 +43,7 @@ const AdminPanel = () => {
                                     className="table-headings"
                                     align="center"
                                 >
-                                    Users
+                                    Members
                                 </TableCell>
                                 <TableCell
                                     className="table-headings"

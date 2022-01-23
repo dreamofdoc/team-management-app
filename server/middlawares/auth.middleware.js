@@ -15,7 +15,7 @@ export const loginMiddleware = async (req, res, next) => {
         res.status(200).json({ user, token, message: 'Logged in' });
         next();
     } catch (err) {
-        res.status(400).json({ err });
+        res.status(400).json({ message: 'Authentication Error' });
     }
 }
 

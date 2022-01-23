@@ -30,7 +30,7 @@ const Profile = () => {
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj3be0NvJcT_uyHSuHN5t47-D2orRO656BqMwAZnFpc7FpZhc5bbteQPna5I46SuKqe0U&usqp=CAU"
                         alt="User Picture"
                     />
-                    <p><b>Team: </b>{user.team.name}</p>
+                    <p><b>Team: </b>{user.team.name === '' ? <span>No team currently</span> : <span>{user.team.name}</span>}</p>
                     <p><b>Hobbies: </b><ul>
                         <li>Football</li>
                         <li>Cybersport</li>
