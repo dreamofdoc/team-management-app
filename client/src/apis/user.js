@@ -1,5 +1,6 @@
 import axios from "axios";
-import {login, getUsers, setError} from "../slices/userSlice";
+import { login, getUsers, setError } from "../slices/userSlice";
+import {removeUser} from "../slices/teamSlice";
 
 export const loginApi = (username, password, callback) => async dispatch => {
     try {
@@ -10,11 +11,11 @@ export const loginApi = (username, password, callback) => async dispatch => {
         localStorage.setItem('token', response.data.token);
         dispatch(login(response.data));
         callback(response.data, null);
-        console.log(response.data.user)
+        // console.log(response.data.user)
     } catch (err) {
         dispatch(setError(err.response.data.message));
         callback(null, err.response.data.message)
-        console.log(err.response.data)
+        // console.log(err.response.data)
     }
 }
 
@@ -27,11 +28,11 @@ export const register = (teamName, email, username, password, callback) => async
             password
         });
         callback(response.data, null);
-        console.log(response.data.message)
+        // console.log(response.data.message)
     } catch (err) {
         callback(null, err.response.data.message);
         dispatch(setError(err.response.data.message));
-        console.log(err.response.data)
+        // console.log(err.response.data)
     }
 }
 
@@ -53,9 +54,20 @@ export const auth = () => async dispatch => {
 export const getUsersApi = () => async dispatch => {
     try {
         const response = await axios.get('http://localhost:8000/api/auth/get_users');
-        console.log(response.data)
+        // console.log(response.data)
         dispatch(getUsers(response.data.users));
     } catch (err) {
-        console.log(err.response)
+        // console.log(err.response)
+    }
+}
+
+export const deleteUserApi = (id) => async dispatch => {
+    try {
+        const response = await axios.delete(`http://localhost:8000/api/auth/${id}`);
+        dispatch(removeUser(response.data.teams));
+        console.log(response.data)
+    } catch (err) {
+        // console.log(err.response)
+        dispatch(setError(err.response.data.message));
     }
 }

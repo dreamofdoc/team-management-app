@@ -68,6 +68,11 @@ router.post('/operation/add_user_to_team', async (req, res) => {
                 if (user.username === username) return res.status(400).json({ message: 'Member with such username already exists' });
             });
         });
+        if (user.team !== null) {
+            const prevTeam = await Team.findById(user.team);
+            prevTeam.users.remove(user);
+            await prevTeam.save();
+        }
         await Team.findOneAndUpdate({
             name: teamName
         }, {
@@ -75,16 +80,13 @@ router.post('/operation/add_user_to_team', async (req, res) => {
                 users: user
             }
         });
-        const prevTeam = await Team.findById(user.team);
-        prevTeam.users.remove(user);
         await User.findOneAndUpdate({ username }, { team: team._id }, { new: true, runValidators: true })
-        await prevTeam.save();
         await Team.find({}).populate('users').exec(function (err, teams) {
             if (err) return res.status(400).json({ message: 'Something gone wrong with teams' })
             res.status(200).json({ teams, message: `User has been added to ${req.body.teamName}` });
         });
     } catch (err) {
-        res.status(400).json({ message: 'Something gone wrong' });
+        res.status(400).json({ message: 'Something gone wrong', err });
     }
 });
 
@@ -92,15 +94,19 @@ router.delete('/operation/delete_user_from_team', async (req, res) => {
     try {
         const { username, teamName } = req.body;
         if (!username) return res.status(400).json({ message: 'Enter member name to delete' });
-        const user = await User.findOne({ username });
-        const team = await Team.findOne({ name: teamName });
-        team.users.remove(user);
-        await team.save();
-        await User.findOneAndUpdate({ username }, { team: '' }, { new: true, runValidators: true });
-        await Team.find({}).populate('users').exec(function (err, teams) {
-            if (err) return res.status(400).json({ message: 'Choose username to delete user' })
-            res.status(200).json({ teams, message: 'User has been removed from team' });
-        });
+        try {
+            const user = await User.findOne({ username });
+            const team = await Team.findOne({ name: teamName });
+            team.users.remove(user);
+            await team.save();
+            await User.findOneAndUpdate({ username }, { team: null }, { new: true, runValidators: true });
+            await Team.find({}).populate('users').exec(function (err, teams) {
+                if (err) return res.status(400).json({ message: 'Choose username to delete user' })
+                res.status(200).json({ teams, message: 'User has been removed from team' });
+            });
+        } catch (err) {
+            res.status(400).json({ message: 'Server error' });
+        }
     } catch (err) {
         res.status(400).json({ message: 'Choose username to delete user' });
     }

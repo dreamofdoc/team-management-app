@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import NavBar from "./NavBar";
 
 const Profile = () => {
@@ -11,9 +11,9 @@ const Profile = () => {
         try {
             const response = await axios.get(`http://localhost:8000/api/auth/profile/${userID}`);
             setUser(response.data.user);
-            console.log(response.data.user);
+            // console.log(response.data.user);
         } catch (err) {
-            console.log(err.response.data)
+            // console.log(err.response.data)
         }
     }
 
@@ -30,7 +30,7 @@ const Profile = () => {
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj3be0NvJcT_uyHSuHN5t47-D2orRO656BqMwAZnFpc7FpZhc5bbteQPna5I46SuKqe0U&usqp=CAU"
                         alt="User Picture"
                     />
-                    <p><b>Team: </b>{user.team.name === '' ? <span>No team currently</span> : <span>{user.team.name}</span>}</p>
+                    <p><b>Team: </b>{user.team === null ? <span>No team currently</span> : <span>{user.team.name}</span>}</p>
                     <p><b>Hobbies: </b><ul>
                         <li>Football</li>
                         <li>Cybersport</li>

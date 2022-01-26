@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField, Typography} from "@mui/material";
-import {addUserToTeamApi, removeUserFromTeamApi, updateTeamApi} from "../../apis/team";
-import {useDispatch, useSelector} from "react-redux";
-import {getUsersApi} from "../../apis/user";
+import React, { useState } from 'react';
+import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
+import { addUserToTeamApi, removeUserFromTeamApi, updateTeamApi } from "../../apis/team";
+import { useDispatch, useSelector } from "react-redux";
 import { setError } from '../../slices/teamSlice';
+import { setError as setUserError} from "../../slices/userSlice"
+import {deleteUserApi} from "../../apis/user";
 
 const style = {
     position: 'absolute',
@@ -30,10 +31,6 @@ const UpdateTeamModal = ({ team }) => {
     const error = useSelector(state => state.team.error);
 
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(getUsersApi());
-    }, [dispatch]);
 
     return (
         <div>
@@ -100,6 +97,7 @@ const UpdateTeamModal = ({ team }) => {
                             dispatch(updateTeamApi(team._id, teamName, maxNum, (data, err) => {
                                 if (!err) {
                                     dispatch(setError(''));
+                                    dispatch(setUserError(''));
                                     setTeamName('');
                                     setMaxNum('');
                                     handleClose();
@@ -119,6 +117,7 @@ const UpdateTeamModal = ({ team }) => {
                             dispatch(addUserToTeamApi(newUser, team.name, (data, err) => {
                                 if (!err) {
                                     dispatch(setError(''));
+                                    dispatch(setUserError(''));
                                     setTeamName('');
                                     setMaxNum('');
                                     handleClose();
@@ -137,6 +136,7 @@ const UpdateTeamModal = ({ team }) => {
                             dispatch(removeUserFromTeamApi(newUser, team.name, (data, err) => {
                                 if (!err) {
                                     dispatch(setError(''));
+                                    dispatch(setUserError(''));
                                     setTeamName('');
                                     setMaxNum('');
                                     handleClose();
@@ -146,6 +146,12 @@ const UpdateTeamModal = ({ team }) => {
                     >
                         Remove Member
                     </Button>
+
+
+                    {/*Here I must code button to delete user*/}
+
+
+
                 </Box>
             </Modal>
         </div>

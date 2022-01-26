@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {Box, Button, Modal, TextField, Typography} from "@mui/material";
-import {useDispatch, useSelector} from "react-redux";
-import {addTeamApi} from "../../apis/team";
+import { useDispatch, useSelector } from "react-redux";
+import { addTeamApi } from "../../apis/team";
 import { setError } from '../../slices/teamSlice';
 
 const style = {
@@ -71,7 +71,7 @@ const AddTeamModal = () => {
                                 if (!err) {
                                     dispatch(setError(''));
                                     setTeamName('');
-                                    setMaxNum('');
+                                    setMaxNum(0);
                                     handleClose();
                                 }
                             }));

@@ -79,4 +79,22 @@ router.get('/auth', authMiddleware,
     }
 );
 
+router.delete('/:id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        await Team.findOne({ _id: user.team }).populate('users').exec(async function (err, team) {
+            if (err) return res.status(400).json({ message: 'Error getting team' });
+            team.users.remove(user);
+            await team.save();
+        })
+        await User.findByIdAndDelete(req.params.id);
+        await Team.find({}).populate('users').exec(function (err, teams) {
+            if (err) return res.status(400).json({ message: 'Error getting teams' });
+            res.status(200).json({ teams, message: 'User has been deleted' });
+        });
+    } catch (err) {
+        res.status(400).json({ message: 'Error while deleting user', err });
+    }
+});
+
 export default router;

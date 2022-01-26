@@ -1,6 +1,5 @@
 body {
     background-color: #FCF4F0;
-    font-family: fantasy;
 }
 
 #root {
@@ -17,7 +16,7 @@ body {
 }
 
 .landing-register-header {
-    font-family: Chilanka, sans-serif;
+    font-family: sans-serif;
     text-align: center;
 }
 

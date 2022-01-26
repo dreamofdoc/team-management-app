@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import {deleteTeamApi, getTeamsApi} from "../../apis/team";
+import { deleteTeamApi, getTeamsApi } from "../../apis/team";
 import AddTeamModal from "./AddTeamModal";
 import UpdateTeamModal from "./UpdateTeamModal";
 import NavBar from "../NavBar";
+import { getUsersApi } from "../../apis/user";
 import {
     Button,
     ButtonGroup,
@@ -22,6 +23,7 @@ const AdminPanel = () => {
 
     useEffect(() => {
         dispatch(getTeamsApi());
+        dispatch(getUsersApi());
     }, [dispatch]);
 
     return (

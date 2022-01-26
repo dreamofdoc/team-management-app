@@ -1,13 +1,21 @@
 import axios from "axios";
-import {addTeam, getTeams, deleteTeam, updateTeam, setError, addUser, removeUser} from "../slices/teamSlice";
+import {
+    addTeam,
+    getTeams,
+    deleteTeam,
+    updateTeam,
+    setError,
+    addUser,
+    removeMember
+} from "../slices/teamSlice";
 
 export const getTeamsApi = () => async dispatch => {
     try {
         const response = await axios.get('http://localhost:8000/api/teams/get_teams');
         dispatch(getTeams(response.data));
-        console.log(response.data)
+        // console.log(response.data)
     } catch (err) {
-        console.log(err.response.data)
+        // console.log(err.response.data)
     }
 }
 
@@ -22,7 +30,7 @@ export const addTeamApi = (name, maxNum, callback) => async dispatch => {
     } catch (err) {
         dispatch(setError(err.response.data.message));
         callback(null, err.response.data.message)
-        console.log(err.response.data)
+        // console.log(err.response.data)
     }
 }
 
@@ -31,7 +39,7 @@ export const deleteTeamApi = (id) => async dispatch => {
         const response = await axios.delete(`http://localhost:8000/api/teams/${id}`);
         dispatch(deleteTeam(response.data))
     } catch (err) {
-        console.log(err.response.data)
+        // console.log(err.response.data)
     }
 }
 
@@ -43,11 +51,11 @@ export const updateTeamApi = (id, name, maxNum, callback) => async dispatch => {
         });
         dispatch(updateTeam(response.data));
         callback(response.data, null)
-        console.log(response.data)
+        // console.log(response.data)
     } catch (err) {
         dispatch(setError(err.response.data.message))
         callback(null, err.response.data.message)
-        console.log(err.response.data)
+        // console.log(err.response.data)
     }
 }
 
@@ -59,11 +67,11 @@ export const addUserToTeamApi = (username, teamName, callback) => async dispatch
         });
         dispatch(addUser(response.data.teams));
         callback(response.data, null)
-        console.log(response.data.message);
+        // console.log(response.data.message);
     } catch (err) {
         dispatch(setError(err.response.data.message));
         callback(null, err.response.data.message)
-        console.log(err.response.data.message);
+        // console.log(err.response.data.message);
     }
 }
 
@@ -73,9 +81,9 @@ export const removeUserFromTeamApi = (username, teamName, callback) => async dis
                 username,
                 teamName
             }});
-        dispatch(removeUser(response.data.teams));
+        dispatch(removeMember(response.data.teams));
         callback(response.data, null)
-        console.log(response.data.message)
+        // console.log(response.data.message)
     } catch (err) {
         dispatch(setError(err.response.data.message));
         callback(null, err.response.data.message)
